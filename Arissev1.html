@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Arisse Manualidades</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bookman+Old+Style&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  <style>
+    body {
+      font-family: 'Bookman Old Style', serif;
+      background-color: #fefaf1;
+    }
+    .soft-gold {
+      background-color: #d4af37;
+      color: #fff;
+    }
+    .catalogo-imagen:hover .overlay {
+      opacity: 1;
+    }
+    .catalogo-imagen .overlay {
+      transition: opacity 0.5s ease;
+      opacity: 0;
+    }
+  </style>
+</head>
+<body class="text-gray-800">
+  <!-- Encabezado Fijo -->
+  <header class="sticky top-0 z-50 bg-white shadow-md py-4 px-6 text-center">
+    <h1 class="text-2xl font-bold">Convierte tu evento en algo inolvidable con detalles únicos y hechos con amor</h1>
+  </header>
+
+  <!-- Bienvenida -->
+  <section class="text-center py-10 animate__animated animate__fadeIn">
+    <h2 class="text-4xl mb-4 font-bold">Arisse Manualidades y Decoraciones</h2>
+    <p class="text-xl italic">Detalles hechos con amor para cada momento especial.</p>
+  </section>
+
+  <!-- Botón de catálogo -->
+  <section class="text-center my-6">
+    <button id="btnMostrarCatalogo" class="bg-yellow-300 hover:bg-yellow-400 text-white py-3 px-6 rounded-full shadow-lg animate__animated animate__pulse">
+      ¿Cuál es la ocasión especial que vamos a celebrar?
+    </button>
+  </section>
+
+  <!-- Catálogo -->
+  <section id="catalogo" class="hidden grid grid-cols-1 md:grid-cols-3 gap-4 px-8 py-6">
+    <!-- Ejemplo de catálogo -->
+    <div class="catalogo-imagen relative rounded-2xl overflow-hidden shadow-lg">
+      <img src="img/baby-shower.jpg" alt="Baby Shower" class="w-full h-64 object-cover">
+      <div class="overlay absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center text-white text-xl">Baby Shower</div>
+    </div>
+    <!-- Más catálogos aquí... -->
+  </section>
+
+  <!-- Formulario para agregar productos -->
+  <section class="p-6">
+    <h3 class="text-2xl mb-4 font-semibold">Agrega un producto a tu lista</h3>
+    <input type="text" id="productoInput" placeholder="Nombre del producto" class="border p-2 rounded">
+    <button onclick="agregarProducto()" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded ml-2">Agregar</button>
+  </section>
+
+  <!-- Lista de productos -->
+  <section class="p-6">
+    <h3 class="text-xl font-semibold mb-2">Carrito de compras</h3>
+    <ul id="carrito" class="space-y-2"></ul>
+    <p id="total" class="mt-4 font-bold">Total: $0</p>
+  </section>
+
+  <!-- Formulario de contacto -->
+  <section class="p-6">
+    <h3 class="text-2xl mb-4 font-semibold">Contáctanos</h3>
+    <form id="formContacto" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <input type="text" placeholder="Tipo de evento" class="border p-2 rounded" required>
+      <input type="number" placeholder="Cantidad aproximada" class="border p-2 rounded" required>
+      <input type="date" class="border p-2 rounded" required>
+      <input type="text" placeholder="Necesidades de personalización" class="border p-2 rounded">
+      <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded col-span-2">Enviar</button>
+    </form>
+    <p class="mt-4 italic">* Ofrecemos descuentos por volumen. ¡Consúltanos!</p>
+  </section>
+
+  <!-- Buscador de productos -->
+  <section class="p-6">
+    <input type="text" id="buscador" onkeyup="buscarProducto()" placeholder="Buscar productos..." class="border p-2 w-full rounded">
+  </section>
+
+  <!-- Redes sociales -->
+  <footer class="bg-gray-100 p-6 text-center mt-10">
+    <p class="mb-2">Contacto:</p>
+    <a href="https://wa.me/525581527114" target="_blank" class="text-green-600 hover:underline"><i class="fab fa-whatsapp"></i> WhatsApp</a><br>
+    <a href="https://facebook.com/Manualidades-y-decoraciones" target="_blank" class="text-blue-600 hover:underline"><i class="fab fa-facebook"></i> Facebook</a>
+  </footer>
+
+  <!-- Scripts JS -->
+  <script>
+    let productos = [];
+
+    document.getElementById('btnMostrarCatalogo').addEventListener('click', () => {
+      document.getElementById('catalogo').classList.toggle('hidden');
+    });
+
+    function agregarProducto() {
+      const input = document.getElementById('productoInput');
+      const nombre = input.value.trim();
+      if (nombre === '') {
+        alert('Por favor, escribe un nombre de producto.');
+        return;
+      }
+      productos.push({ nombre, precio: 50 }); // Precio base
+      input.value = '';
+      actualizarCarrito();
+    }
+
+    function actualizarCarrito() {
+      const lista = document.getElementById('carrito');
+      lista.innerHTML = '';
+      let total = 0;
+      productos.forEach((prod, index) => {
+        total += prod.precio;
+        const item = document.createElement('li');
+        item.textContent = `${prod.nombre} - $${prod.precio}`;
+        const btnEliminar = document.createElement('button');
+        btnEliminar.textContent = 'Eliminar';
+        btnEliminar.className = 'ml-2 text-red-600';
+        btnEliminar.onclick = () => eliminarProducto(index);
+        item.appendChild(btnEliminar);
+        lista.appendChild(item);
+      });
+      document.getElementById('total').textContent = `Total: $${total}`;
+    }
+
+    function eliminarProducto(index) {
+      productos.splice(index, 1);
+      actualizarCarrito();
+    }
+
+    function buscarProducto() {
+      const texto = document.getElementById('buscador').value.toLowerCase();
+      const items = document.querySelectorAll('#carrito li');
+      items.forEach(item => {
+        const visible = item.textContent.toLowerCase().includes(texto);
+        item.style.display = visible ? '' : 'none';
+      });
+    }
+  </script>
+</body>
+</html>
